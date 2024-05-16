@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    
+    <link rel='stylesheet' href="estilo.css">
+    <title>App tempo</title>
+</head>
+<body>
+    <div class='container'>
+        <div class="procurar">
+            <input type="text" placeholder="Digite o nome da cidade"
+            spellcheck="false">
+            <button><img src="images/search.png"></button>
+        </div>
+
+        <div class="error">
+            <p>Nome de cidade inválida</p>
+        </div>
+
+        <div class="tempo">
+            <img src="images/rain.png" class="tempo_icon">
+            <h1 class="temperatura">26°C</h1>
+            <h2 class="cidade">Bicanga</h2>
+            <div class="detalhes">
+                <div class="col">
+                    <img src="images/humidity.png" alt="">
+                    <div>
+                        <p class="Umidade">82%</p>
+                        <p>Umidade</p>
+
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="">
+                    <div>
+                        <p class="vento">13Km/h</p>
+                        <p>Vento</p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+       
+
+        </button>
+
+        </div>
+    </div>
+   
+<script>
+const apikey= "b44584de73361318ad870c23dd116148 ";
+const apiurl= "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+const procurar_caixa= document.querySelector('.procurar input');
+const procurar_botao= document.querySelector('.procurar button');
+const icontempo= document.querySelector('.tempo_icon')
+
+
+async function oiatempo(cidade){
+    const response= await fetch(apiurl+ cidade+`&appid=${apikey}`);
+    if(response.status== 404){
+        document.querySelector('.error').style.display='block'
+        document.querySelector('.tempo').style.display=' none'
+    }else{
+        
+        var data = await response.json();
+        document.querySelector('.error').style.display='none'
+ 
+        document.querySelector(".cidade").innerHTML=data.name;
+        document.querySelector('.temperatura').innerHTML= Math.round(data.main.temp) +'°C';
+        document.querySelector('.Umidade').innerHTML= data.main.humidity + '%';
+        document.querySelector('.vento').innerHTML= data.wind.speed + 'Km/h';
+        var tempo_cidade= data.weather[0].main
+        if(tempo_cidade=='Clouds'){
+            icontempo.src='images/clouds.png';
+        }
+        else if(tempo_cidade=='Clear'){
+            icontempo.src='images/clear.png'
+        }
+        else if(tempo_cidade=='Drizzle'){
+            icontempo.src='images/drizzle.png'
+        }
+        else if(tempo_cidade=='Mist'){
+            icontempo.src='images/mist.png'
+        }
+        else if(tempo_cidade=='Rain'){
+            icontempo.src='images/rain.png'
+        }
+        else if(tempo_cidade=='Snow'){
+            icontempo.src='images/snow.png'
+        }
+
+        document.querySelector('.tempo').style.display='block'
+
+    }
+    
+}
+
+
+procurar_botao.addEventListener("click", ()=>{
+    oiatempo(procurar_caixa.value);
+
+})
+
+</script>    
+
+</body>
+</html>
